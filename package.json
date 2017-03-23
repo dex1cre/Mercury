@@ -1,0 +1,25 @@
+{
+  "name": "mercury",
+  "version": "1.0.0",
+  "description": "NodeJS folders for development",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dex1cre/Mercury.git"
+  },
+  "author": "dex1cre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dex1cre/Mercury/issues"
+  },
+  "homepage": "https://github.com/dex1cre/Mercury#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "pug": "^2.0.0-beta11",
+    "sqlite3": "^3.1.8"
+  }
+}
