@@ -1,9 +1,10 @@
 //Подключаем модули
-var express, bodyParser, app, port, server;
+var express, bodyParser, app, port, server, admin;
 
 express = require('express');
 bodyParser = require('body-parser');
 server = require('./server');
+admin = require('./admin');
 port = 3000;
 app = express();
 
@@ -13,12 +14,14 @@ app.disable("x-powererd-by");
 app.use(express['static'](__dirname + '/public'));
 app.set('view engine', 'pug');
 
-
 app.use(function(req, res, next) {
-	if (server.data[req.url]) {
-		server.data[req.url](req, res);
+	if(server.data[req.path])
+	{
+		server.data[req.path](req, res);
+	} else if (admin.data[req.path]) {
+		admin.data[req.path](req, res);
 	} else {
-		res.end("404, not found!");
+		res.end("404");
 	}
 });
 

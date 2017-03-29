@@ -4,6 +4,7 @@ db = new sqlite3.Database("some_db.db");
 
 
 var index = function(req, res) {
+
 	res.end("hello, mutherfucker");
 }
 

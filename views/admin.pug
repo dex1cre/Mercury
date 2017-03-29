@@ -1,0 +1,105 @@
+html
+	head
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible" content="IE=edge")
+		link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
+		link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous")
+		link(rel="stylesheet" href="css/admin.css")
+		style.
+			.left-menu ul {
+				text-align: center;
+			}
+
+			.left-menu ul li {
+				cursor: pointer;
+			}
+
+			.col-md-3, .col-md-8 {
+				height: 600px;
+				box-shadow: 0 0 1px 0 rgba(0,0,0,.5);
+			}
+
+			.col-md-8 {
+				overflow-x: hidden;
+				overflow-y: auto;
+			}
+
+			.col-md-8 ul {
+				width: 100%;
+			}
+
+			.col-md-8 ul a {
+				text-decoration: none;
+				color: #333;
+			}
+
+			.col-md-8 ul li {
+				padding: 10px;
+
+				width: 100%;
+				box-shadow: 0 2px 1px 0;
+
+				cursor: pointer;
+
+				display: block;
+			}
+
+			.col-md-8 ul li:hover {
+				background: rgba(0,0,0, .1);
+			}
+
+			.col-md-8 ul li p {
+				width: 80%;
+				height: 40px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis !important;
+			}
+	body
+		.container(style="margin-top: 50px;")
+			.row
+				.col-md-3.col-sm-12.col-xs-12.left-menu
+					ul.nav
+						for i in tables
+							li
+								a(href="/be-admin/all?t="+i[2])= i[0]
+
+				.col-md-1
+				.col-md-8.col-sm-8.col-xs-8
+					if dataOk == "Ok"
+						ul
+							for i in data
+								a(href="/be-admin/number?t=" + tableName + "&&number=" + i.id)
+									li
+										h3= i[tables[tableName][1][1]]
+										p= i[tables[tableName][1][2]]
+					else if one_dataOk == "Ok"
+						.row
+							.col-md-6.col-sm-12.col-xs-12
+								- var k = 0
+								for i in one_data[0]
+									h3= tables[tableName][1][k]
+									p= i
+									-k++
+									
+							.col-md-6.col-sm-12.col-xs-12
+								form(method="post" action="/be-admin/save")
+									input(type="text" name="table" style="display:none" value=tableName)
+									input(type="text" name="id" style="display:none" value=one_data[0].id)
+									-var k = 0
+									for i in one_data[0]
+										.form-group
+											if k != 0
+												label(for=)= tables[tableName][1][k]
+												input(type="text" name=tables[tableName][1][k] id=tables[tableName][1][k] placeholder=i).form-control
+										-k++
+
+									button.btn.btn-success Сохранить
+
+								form(method="post" action="/be-admin/delete")
+									input(type="text" name="table" style="display:none" value=tableName)
+									input(type="text" name="id" style="display:none" value=one_data[0].id)
+									button.btn.btn-danger Удалить
+						
+		script(src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js")
+		script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")
