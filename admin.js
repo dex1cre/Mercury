@@ -30,26 +30,35 @@ var getOnse = function(req, res) {
 }
 
 var save = function(req, res) {
-	var table = tables[req.body.table][0];
-	var id = req.body.id;
+	var table = tables[req.query.t][0];
+	var id = req.query.number;
 
 	var sql = "UPDATE " + table + " SET ";
 	var flag = true;
-	var k = 0;
+	var k = -1;
+	var sch = 0
 
 	for (i in req.body) {
-		if (k > 1) {
-			if (k != tables[req.body.table][1].length)
-				sql = sql +  i + "='" + req.body[i] + "', ";
-			else
-				sql = sql +  i + "='" + req.body[i] + "' ";
-		}
-		k++;
+		if (req.body[i])
+			sch++;
+	}
 
-		if (req.body[i] == "") {
-			flag = false;
-			break;
+	for (i in req.body) {
+		k++;
+		console.log(k, sch);
+
+		if (!req.body[i]) {
+			if (k == sch)
+				sql += "' ";
+			continue;
+		} else {
+			sql = sql +  i + "='" + req.body[i];
+			if (k > 0 && k != sch)
+				sql += "', ";
+			if (k == sch)
+				sql += "' ";
 		}
+
 	}
 
 	if (flag) {
@@ -61,7 +70,7 @@ var save = function(req, res) {
 			return db.run(sql, function(err) {
 				if (err)
 					console.log(err);
-				return res.redirect("/be-admin/number?t="+req.body.table+"&&number="+id);
+				return res.redirect("/be-admin/number?t="+req.query.t+"&&number="+id);
 			});
 		});
 	} else {
@@ -84,6 +93,58 @@ var dlt = function(req, res) {
 	});
 }
 
+var nw = function(req, res) {
+	res.render("admin", {newOk: "Ok", tables: tables, tableName: req.query.t});
+}
+
+var newD = function(req, res) {
+	var table = tables[req.query.t][0];
+	var id = req.body.id;
+
+	var sql = "INSERT INTO " + table + "(";
+	var k = 0;
+
+	for (i in tables[req.query.t][1]) {
+		if(k == tables[req.query.t][1].length-1) {
+			sql += tables[req.query.t][1][i] + ") ";
+			break
+		} else if (tables[req.query.t][1][i] != "id")
+			sql += tables[req.query.t][1][i] + ", ";
+		 
+		k++;
+	}
+	k = 0;
+
+	sql += "VALUES(";
+	var flag = true;
+
+	for (i in req.body) {
+		if (k != tables[req.query.t][1].length-2)
+			sql += "'" + req.body[i] + "', ";
+		else
+			sql += "'" + req.body[i] + "') ";
+
+		if (req.body[i] == "") {
+			flag = false;
+			break;
+		}
+		k++;
+	}
+
+	if (flag) {
+
+		db.serialize(function() {
+			return db.run(sql, function(err) {
+				if (err)
+					console.log(err);
+				return res.redirect("/be-admin/all?t="+req.query.t);
+			});
+		});
+	} else {
+		res.end("Введены не все данные!")
+	}
+}
+
 tables = {
 	't': [ "test", [
 		"id", "title", "description"
@@ -95,7 +156,9 @@ data = {
 	"/be-admin/all": getAll,
 	"/be-admin/number": getOnse,
 	'/be-admin/save': save,
-	'/be-admin/delete': dlt
+	'/be-admin/delete': dlt,
+	'/be-admin/nw': nw,
+	'/be-admin/new': newD
 }
 
 exports.data = data;

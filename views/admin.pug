@@ -55,14 +55,23 @@ html
 				overflow: hidden;
 				text-overflow: ellipsis !important;
 			}
+
+			.glyphicon-plus {
+				position: absolute;
+				top: -37px;
+
+				width: 50px;
+				border-radius: 100px;
+			}
 	body
 		.container(style="margin-top: 50px;")
 			.row
 				.col-md-3.col-sm-12.col-xs-12.left-menu
 					ul.nav
 						for i in tables
-							li
+							li(style="position: relative;")
 								a(href="/be-admin/all?t="+i[2])= i[0]
+								a(href="/be-admin/nw?t="+i[2]).glyphicon.glyphicon-plus
 
 				.col-md-1
 				.col-md-8.col-sm-8.col-xs-8
@@ -83,9 +92,7 @@ html
 									-k++
 									
 							.col-md-6.col-sm-12.col-xs-12
-								form(method="post" action="/be-admin/save")
-									input(type="text" name="table" style="display:none" value=tableName)
-									input(type="text" name="id" style="display:none" value=one_data[0].id)
+								form(method="post" action="/be-admin/save?t="+tableName+"&&number="+one_data[0].id)
 									-var k = 0
 									for i in one_data[0]
 										.form-group
@@ -100,6 +107,14 @@ html
 									input(type="text" name="table" style="display:none" value=tableName)
 									input(type="text" name="id" style="display:none" value=one_data[0].id)
 									button.btn.btn-danger Удалить
-						
+
+					else if newOk="Ok"
+						form(method="post" action="/be-admin/new?t="+tableName)
+							for i in tables[tableName][1]
+								if i != "id"
+									.form-group
+										label(for="")= i
+										input(type="text" name=i id=i placeholder=i).form-control
+							button.btn.btn-primary Создать
 		script(src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js")
 		script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")
