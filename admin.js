@@ -35,30 +35,23 @@ var save = function(req, res) {
 
 	var sql = "UPDATE " + table + " SET ";
 	var flag = true;
-	var k = -1;
 	var sch = 0
+
+	for (i in req.body)
+		if (req.body[i])
+			sch++;
 
 	for (i in req.body) {
 		if (req.body[i])
-			sch++;
-	}
+			console.log(i);
 
-	for (i in req.body) {
-		k++;
-		console.log(k, sch);
-
-		if (!req.body[i]) {
-			if (k == sch)
-				sql += "' ";
-			continue;
-		} else {
-			sql = sql +  i + "='" + req.body[i];
-			if (k > 0 && k != sch)
-				sql += "', ";
-			if (k == sch)
-				sql += "' ";
+		if(req.body[i] != "" && sch-1>0) {
+			sql += i + "='" + req.body[i] + "', ";
+			sch--;
+		} else if (req.body[i] != "" && sch == 1) {
+			sql += i + "='" + req.body[i] + "' ";
+			break;
 		}
-
 	}
 
 	if (flag) {

@@ -75,7 +75,10 @@ html
 
 				.col-md-1
 				.col-md-8.col-sm-8.col-xs-8
-					if dataOk == "Ok"
+					if noneObject == "Ok"
+						h2(style="text-align: center;") Hello!)
+						h3(style="text-align: center;") Выберете таблицу в левом меню					
+					else if dataOk == "Ok"
 						ul
 							for i in data
 								a(href="/be-admin/number?t=" + tableName + "&&number=" + i.id)
