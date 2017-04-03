@@ -1,10 +1,11 @@
 //Подключаем модули
-var express, bodyParser, app, port, server, admin;
+var express, bodyParser, app, port, server, admin, helmet;
 
 express = require('express');
 bodyParser = require('body-parser');
 server = require('./server');
 admin = require('./admin');
+helmet = require('helmet');
 port = 3000;
 app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.disable("x-powererd-by");
 app.use(express['static'](__dirname + '/public'));
 app.set('view engine', 'pug');
+app.use(helmet())
 
 app.use(function(req, res, next) {
 	if(server.data[req.path])
